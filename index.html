@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Какой суп приготовить на след неделе?</title>
+<title>Выбор супа на следующую неделю</title>
 <style>
 :root{--bg:#fbf6ee;--ink:#2b2118;--mute:#7a6a5a;--card:#fffdf9;--line:#e6d9c7;--accent:#c8452d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1f1812;--ink:#f3e8d8;--mute:#b3a08a;--card:#2a2119;--line:#4a3b2e;--accent:#ef7a5f}}
@@ -24,6 +24,7 @@ h1{font-size:clamp(24px,6vw,32px);line-height:1.2;margin:8px 0 6px;font-weight:7
 .opt:active{transform:scale(.97)}
 .opt svg{width:100%;max-width:200px;height:auto}
 .opt span{font-size:clamp(18px,4.6vw,24px);font-weight:700}
+.opt small{font-size:14px;color:var(--mute);font-style:italic;line-height:1.25}
 .win{display:none}
 .win .big svg{width:70%;max-width:260px}
 .win h2{font-size:34px;margin:6px 0 4px;color:var(--accent)}
@@ -35,7 +36,7 @@ h1{font-size:clamp(24px,6vw,32px);line-height:1.2;margin:8px 0 6px;font-weight:7
 </head>
 <body>
 <main>
-<h1>Какой суп приготовить на след неделе?</h1>
+<h1>Выбор супа на следующую неделю</h1>
 <p class="round" id="round"></p>
 <div class="bar"><i id="prog"></i></div>
 <div class="pair" id="pair"></div>
@@ -50,14 +51,14 @@ h1{font-size:clamp(24px,6vw,32px);line-height:1.2;margin:8px 0 6px;font-weight:7
 </main>
 <script>
 var SOUPS=[
- {n:"Гороховый",c:"#d9b640",g:["#7a8a2a","#a8452d"]},
- {n:"Куриный",c:"#eac56a",g:["#f5efe0","#e8924a"]},
+ {n:"Гороховый",t:"не очень люблю",c:"#d9b640",g:["#7a8a2a","#a8452d"]},
+ {n:"Куриный",t:"с вермишелью или рисом",c:"#eac56a",g:["#f5efe0","#e8924a"]},
  {n:"Рассольник",c:"#c9a34a",g:["#5f8a3a","#f1ead2"]},
- {n:"Борщ",c:"#b3262e",g:["#f5efe0","#3e7a38"]},
+ {n:"Борщ",t:"готовил только 1 раз",c:"#b3262e",g:["#f5efe0","#3e7a38"]},
  {n:"Щи",c:"#a8b45a",g:["#f5efe0","#e8d9a0"]},
  {n:"Щавелевый",c:"#9aa83a",g:["#f5efe0","#e8c84a"]},
  {n:"Грибной",c:"#a67c52",g:["#e8d4b0","#6b4a2a"]},
- {n:"Сырный",c:"#f0c24b",g:["#d9a441","#7aa04a"]}
+ {n:"Сырный",t:"с плавленым сырком",c:"#f0c24b",g:["#d9a441","#7aa04a"]}
 ];
 function bowl(s){
   var d="";
@@ -93,7 +94,7 @@ function show(){
   var p=document.getElementById("pair");p.innerHTML="";
   [a,b].forEach(function(s,i){
     var bt=document.createElement("button");bt.className="opt";
-    bt.innerHTML=bowl(s)+"<span>"+s.n+"</span>";
+    bt.innerHTML=bowl(s)+"<span>"+s.n+"</span>"+(s.t?"<small>"+s.t+"</small>":"");
     bt.onclick=function(){pick(i)};
     p.appendChild(bt);
   });
