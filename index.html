@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Какой суп приготовить на след неделе?</title>
+<style>
+:root{--bg:#fbf6ee;--ink:#2b2118;--mute:#7a6a5a;--card:#fffdf9;--line:#e6d9c7;--accent:#c8452d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1f1812;--ink:#f3e8d8;--mute:#b3a08a;--card:#2a2119;--line:#4a3b2e;--accent:#ef7a5f}}
+:root[data-theme="dark"]{--bg:#1f1812;--ink:#f3e8d8;--mute:#b3a08a;--card:#2a2119;--line:#4a3b2e;--accent:#ef7a5f}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Times New Roman",serif;min-height:100vh;display:flex;justify-content:center}
+main{width:100%;max-width:560px;padding:24px 16px 32px;text-align:center}
+h1{font-size:clamp(24px,6vw,32px);line-height:1.2;margin:8px 0 6px;font-weight:700}
+.round{color:var(--mute);font-size:15px;margin:0 0 20px;min-height:1.4em}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:0 auto 22px;max-width:320px}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px 8px 16px;cursor:pointer;font:inherit;color:inherit;display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .15s,border-color .15s}
+.opt:hover,.opt:focus-visible{border-color:var(--accent);outline:none}
+.opt:active{transform:scale(.97)}
+.opt svg{width:100%;max-width:200px;height:auto}
+.opt span{font-size:clamp(18px,4.6vw,24px);font-weight:700}
+.win{display:none}
+.win .big svg{width:70%;max-width:260px}
+.win h2{font-size:34px;margin:6px 0 4px;color:var(--accent)}
+.win p{color:var(--mute);margin:0 0 16px}
+.btn{font:inherit;font-size:17px;background:var(--accent);color:#fff;border:0;border-radius:12px;padding:12px 20px;cursor:pointer;margin:4px}
+.btn.alt{background:transparent;color:var(--ink);border:2px solid var(--line)}
+#msg{min-height:1.4em;color:var(--mute);margin-top:10px;font-size:15px}
+</style>
+</head>
+<body>
+<main>
+<h1>Какой суп приготовить на след неделе?</h1>
+<p class="round" id="round"></p>
+<div class="bar"><i id="prog"></i></div>
+<div class="pair" id="pair"></div>
+<div class="win" id="win">
+  <div class="big" id="winimg"></div>
+  <h2 id="winname"></h2>
+  <p>Победитель!</p>
+  <button class="btn" id="share">Отправить результат</button>
+  <button class="btn alt" id="again">Заново</button>
+  <div id="msg"></div>
+</div>
+</main>
+<script>
+var SOUPS=[
+ {n:"Гороховый",c:"#d9b640",g:["#7a8a2a","#a8452d"]},
+ {n:"Куриный",c:"#eac56a",g:["#f5efe0","#e8924a"]},
+ {n:"Рассольник",c:"#c9a34a",g:["#5f8a3a","#f1ead2"]},
+ {n:"Борщ",c:"#b3262e",g:["#f5efe0","#3e7a38"]},
+ {n:"Щи",c:"#a8b45a",g:["#f5efe0","#e8d9a0"]},
+ {n:"Солянка",c:"#c9602a",g:["#3a3a2a","#d8c84a"]},
+ {n:"Грибной",c:"#a67c52",g:["#e8d4b0","#6b4a2a"]},
+ {n:"Сырный",c:"#f0c24b",g:["#d9a441","#7aa04a"]}
+];
+function bowl(s){
+  var d="";
+  var pos=[[75,78],[105,88],[130,76],[92,68],[118,98],[148,90],[62,92]];
+  for(var i=0;i<pos.length;i++){
+    d+='<circle cx="'+pos[i][0]+'" cy="'+pos[i][1]+'" r="'+(i%2?5:7)+'" fill="'+s.g[i%2]+'" opacity=".92"/>';
+  }
+  return '<svg viewBox="0 0 200 150" aria-hidden="true">'
+   +'<path d="M70 38c-8-10 8-14 0-24M100 40c-8-10 8-14 0-26M130 38c-8-10 8-14 0-24" fill="none" stroke="#9a8a7a" stroke-width="3" stroke-linecap="round" opacity=".55"/>'
+   +'<ellipse cx="100" cy="72" rx="82" ry="26" fill="#f4ece0" stroke="#cdbba3" stroke-width="3"/>'
+   +'<ellipse cx="100" cy="74" rx="68" ry="20" fill="'+s.c+'"/>'
+   +d
+   +'<path d="M18 74c2 44 34 66 82 66s80-22 82-66c-14 24-44 34-82 34S32 98 18 74z" fill="#f4ece0" stroke="#cdbba3" stroke-width="3" stroke-linejoin="round"/>'
+   +'<path d="M58 118c12 8 28 12 42 12" fill="none" stroke="'+s.c+'" stroke-width="5" stroke-linecap="round" opacity=".6"/>'
+   +'</svg>';
+}
+var queue,next,roundName,total,done,cur,pairIdx;
+function start(){
+  queue=SOUPS.slice();next=[];total=queue.length-1;done=0;roundSize=queue.length;
+  document.getElementById("win").style.display="none";
+  document.getElementById("pair").style.display="grid";
+  document.querySelector(".bar").style.display="block";
+  show();
+}
+function label(){
+  return roundSize==8?"Четвертьфинал":roundSize==4?"Полуфинал":"Финал";
+}
+function show(){
+  var a=queue[0],b=queue[1];
+  var n=queue.length;
+  document.getElementById("round").textContent=label()+" · выбери один";
+  document.getElementById("prog").style.width=(done/total*100)+"%";
+  var p=document.getElementById("pair");p.innerHTML="";
+  [a,b].forEach(function(s,i){
+    var bt=document.createElement("button");bt.className="opt";
+    bt.innerHTML=bowl(s)+"<span>"+s.n+"</span>";
+    bt.onclick=function(){pick(i)};
+    p.appendChild(bt);
+  });
+}
+function pick(i){
+  var w=queue[i];queue=queue.slice(2);next.push(w);done++;
+  if(queue.length==0){
+    if(next.length==1){finish(next[0]);return}
+    queue=next;next=[];roundSize=queue.length;
+  }
+  show();
+}
+var champ;
+function finish(w){
+  champ=w;
+  document.getElementById("pair").style.display="none";
+  document.querySelector(".bar").style.display="none";
+  document.getElementById("round").textContent="";
+  document.getElementById("winimg").innerHTML=bowl(w);
+  document.getElementById("winname").textContent=w.n;
+  document.getElementById("win").style.display="block";
+  document.getElementById("msg").textContent="";
+}
+document.getElementById("again").onclick=start;
+document.getElementById("share").onclick=function(){
+  var t="Я выбрала суп на следующую неделю: "+champ.n+" 🍲";
+  var m=document.getElementById("msg");
+  m.innerHTML='<textarea id="rt" readonly rows="2" style="width:100%;font:inherit;padding:8px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);text-align:center"></textarea><div id="st"></div>';
+  var ta=document.getElementById("rt");ta.value=t;ta.focus();ta.select();
+  var ok=false;
+  try{ok=document.execCommand("copy")}catch(e){}
+  document.getElementById("st").textContent=ok?"Скопировано, вставь в чат":"Выдели текст, скопируй и отправь";
+  try{if(navigator.share){navigator.share({text:t}).catch(function(){})}}catch(e){}
+};
+start();
+</script>
+</body>
+</html>
