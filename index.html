@@ -18,7 +18,9 @@ h1{font-size:clamp(24px,6vw,32px);line-height:1.2;margin:8px 0 6px;font-weight:7
 .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .opt{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px 8px 16px;cursor:pointer;font:inherit;color:inherit;display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .15s,border-color .15s}
-.opt:hover,.opt:focus-visible{border-color:var(--accent);outline:none}
+@media (hover:hover){.opt:hover{border-color:var(--accent)}}
+.opt:focus{outline:none}
+.opt:focus-visible{border-color:var(--accent)}
 .opt:active{transform:scale(.97)}
 .opt svg{width:100%;max-width:200px;height:auto}
 .opt span{font-size:clamp(18px,4.6vw,24px);font-weight:700}
